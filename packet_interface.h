@@ -1,7 +1,3 @@
-//
-// Created by Hadrien Libioulle on 01/10/2019.
-//
-
 #ifndef FORMAT_SEGMENTS_PACKET_INTERFACE_H
 #define FORMAT_SEGMENTS_PACKET_INTERFACE_H
 
@@ -11,20 +7,17 @@
 
 
 /* Raccourci pour struct pkt */
-/*
 typedef struct __attribute__((__packed__)) pkt { // notation : pr pouvoir direct ecrire dans la struct
-    uint8_t Type        : 2; //2 bits
-    uint8_t TR          : 1; //1 bit
-    uint8_t Window      : 5; //5 bits
-    uint16_t Length     : 16; // 7/15 bits -> possible de faire un truc variable ?
-    uint8_t Seqnum      : 8; //8 bits
-    uint32_t Timestamp  : 32; //32 bits
-    uint32_t CRC1       : 32; //32 bits
-    uint32_t CRC2       : 32; //32 bits
-    char * payload; // place a la fin pour avoir une struct de taille variable
+    uint8_t Type        ; // 2 bits
+    uint8_t TR          ; // 1 bit
+    uint8_t Window      ; // 5 bits
+    uint16_t Length     ; // 8/16 bits
+    uint8_t Seqnum      ; // 8 bits
+    uint32_t Timestamp  ; // 32 bits
+    uint32_t CRC1       ; // 32 bits
+    uint32_t CRC2       ; // 32 bits
+    char * payload; // at the end (variable size)
 } pkt_t;
-*/
-typedef struct pkt pkt_t;
 
 /* Types de paquets */
 typedef enum {

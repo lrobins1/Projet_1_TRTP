@@ -8,19 +8,6 @@
 /* Extra #includes */
 /* Your code will be inserted here */
 
-struct __attribute__((__packed__)) pkt { // notation : pr pouvoir direct ecrire dans la struct
-    uint8_t Type        ; // 2 bits
-    uint8_t TR          ; // 1 bit
-    uint8_t Window      ; // 5 bits
-    uint16_t Length     ; // 8/16 bits
-    uint8_t Seqnum      ; // 8 bits
-    uint32_t Timestamp  ; // 32 bits
-    uint32_t CRC1       ; // 32 bits
-    uint32_t CRC2       ; // 32 bits
-    char * payload; // at the end (variable size)
-};
-
-
 pkt_t* pkt_new()
 {
     pkt_t * pkt = (pkt_t *) malloc (sizeof(pkt_t));
