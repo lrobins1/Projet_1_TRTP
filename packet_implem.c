@@ -74,7 +74,6 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 
     ret_msg = pkt_set_crc1(pkt, ntohl(CRC1));
     if(ret_msg != PKT_OK) {
-        printf("Alerte : erreur pr le CRC1\n");
         return ret_msg;
     }
 
@@ -88,7 +87,6 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
     computedCRC1 = crc32(computedCRC1, (uint8_t *)header, 6+nBytes);
 
     if (computedCRC1 != pkt_get_crc1(pkt)) {
-        printf("Alerte : erreur pr le computedCRC1\n");
         return E_CRC;
     }
 
@@ -118,12 +116,12 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 
         memcpy(payload, data+payload_pos, payload_size);
         pkt_set_payload(pkt, payload, payload_size); // decode payload
+        free(payload);
 
         uint32_t computedCRC2 = crc32(0L, Z_NULL, 0);
 
         computedCRC2 = crc32(computedCRC2, (uint8_t *)pkt_get_payload(pkt), payload_size);
         if (computedCRC2 != pkt_get_crc2(pkt)) {
-            printf("Alerte : erreur pr le computedCRC2\n");
             return E_CRC;
         }
 
@@ -148,6 +146,8 @@ pkt_status_code pkt_encode(const pkt_t* pkt, char *buf, size_t *len)
     uint8_t * ptr = (uint8_t *)pkt;
     uint16_t pkt_len = pkt_get_length(pkt); // value of the length field
     ssize_t nBytes = varuint_predict_len(pkt_len); // nBytes the value of the length field in bytes
+    if (nBytes == -1)
+        return E_LENGTH;
 
 
     varuint_encode(pkt_len, (uint8_t *)buf+1, nBytes); // encode length
@@ -260,6 +260,8 @@ pkt_status_code pkt_set_length(pkt_t *pkt, const uint16_t length)
     }
 
     ssize_t nBytes = varuint_predict_len(length);
+    if (nBytes == -1)
+        return E_LENGTH;
     uint16_t tmp;
     if (nBytes == 1) {
         tmp = 0b0111111111111111u & length;
