@@ -24,10 +24,10 @@ void pkt_del(pkt_t *pkt)
 
 pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
 {
-    if (len<8) { // packet too short
+    if (len<7) { // packet too short
         return E_NOHEADER;
     }
-    if (len<12) { // packet too short
+    if (len<11) { // packet too short
         return E_CRC;
     }
     int ret_msg = pkt_set_type(pkt, (uint8_t)(*data) >> 6u); // decode type field
@@ -100,7 +100,7 @@ pkt_status_code pkt_decode(const char *data, const size_t len, pkt_t *pkt)
         return E_UNCONSISTENT;
     }
 
-    if (pkt_get_tr(pkt)==0 && pkt_get_type(pkt)==1) {
+    if (pkt_get_tr(pkt)==0 && pkt_get_type(pkt)==1) { // no truncated data type pkt
         size_t payload_size = pkt_get_length(pkt); // size of the payload in bytes
 
         char * payload = malloc(payload_size);
